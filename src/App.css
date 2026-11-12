@@ -1,0 +1,218 @@
+/* 카드 (각 페이지의 최상위 박스) */
+.card {
+  width: 100%;
+  max-width: 420px;
+  margin: auto;
+  padding: 40px 32px;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 480px) {
+    max-width: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 32px 20px;
+  }
+}
+
+.title {
+  font-family: var(--heading);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: var(--text-h);
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+/* 입력칸 */
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  span {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-h);
+  }
+}
+
+.inputGroup input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--text-h);
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &::placeholder {
+    color: var(--text);
+    opacity: 0.6;
+  }
+
+  &:hover {
+    border-color: var(--accent-border);
+  }
+
+  &:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-bg);
+  }
+}
+
+/* 에러 메시지 */
+.error {
+  margin-top: 14px;
+  font-size: 14px;
+  color: #e5484d;
+}
+
+/* 버튼 */
+.btn {
+  margin-top: 24px;
+  padding: 14px 16px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s, border-color 0.2s;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.btn.primary {
+  width: 100%;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+
+  &:hover:not(:disabled) {
+    background: #9524f0;
+  }
+}
+
+.btn.secondary {
+  color: var(--text-h);
+  background: transparent;
+  border: 1.5px solid var(--border);
+
+  &:hover:not(:disabled) {
+    border-color: var(--accent-border);
+  }
+}
+
+.btnRow {
+  display: flex;
+  gap: 10px;
+
+  .btn.secondary {
+    flex: 0 0 auto;
+    padding-inline: 22px;
+  }
+  .btn.primary {
+    flex: 1;
+  }
+}
+
+/* 시간 선택 */
+.slotGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+
+  @media (max-width: 380px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.slot {
+  padding: 12px 0;
+  font: inherit;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-h);
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+
+  &:hover:not(:disabled) {
+    border-color: var(--accent-border);
+  }
+
+  &.taken {
+    color: var(--text);
+    background: var(--social-bg);
+    border-color: transparent;
+    text-decoration: line-through;
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.selected {
+    color: var(--accent);
+    background: var(--accent-bg);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+/* 완료 화면 요약 */
+.summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 20px;
+  margin: 0;
+  padding: 18px 20px;
+  border-radius: 10px;
+  background: var(--social-bg);
+
+  dt {
+    font-size: 14px;
+    color: var(--text);
+  }
+  dd {
+    margin: 0;
+    font-weight: 600;
+    color: var(--text-h);
+  }
+}
