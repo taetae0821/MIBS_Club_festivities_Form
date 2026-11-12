@@ -18,4 +18,9 @@ export default defineConfig([
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
   },
+  // 백엔드(Node.js) 코드
+  {
+    files: ['MIBS_Server/**/*.js'],
+    languageOptions: { globals: globals.node },
+  },
 ])
