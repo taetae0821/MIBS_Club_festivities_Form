@@ -1,6 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { adminLogin, adminLogout, getAdminToken, getWaitingList } from './api.js';
-import { SLOTS } from './slots.js';
+import { INTERVAL_MIN, SLOTS } from './slots.js';
+
+// '10:20' + 10분 → '10:30'
+function addMin(t, m) {
+  const [h, mm] = t.split(':').map(Number);
+  const total = h * 60 + mm + m;
+  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+}
 
 // ───── 로그인 화면 ─────
 function AdminLogin({ onLogin }) {
@@ -54,6 +61,7 @@ function AdminLogin({ onLogin }) {
 // ───── 시간대별 신청 수 막대 차트 ─────
 function HourlyChart({ list }) {
   const [hover, setHover] = useState(null);
+  const [selected, setSelected] = useState(null); // 클릭한 시간대 ('09' 등)
 
   // SLOTS 를 1시간 단위로 묶어서 [{ hour: '09', capacity: 6, booked: 2 }, ...]
   const data = useMemo(() => {
@@ -93,9 +101,18 @@ function HourlyChart({ list }) {
           {data.map((d, i) => (
             <div
               key={d.hour}
-              className="barCol"
+              className={`barCol${selected === d.hour ? ' active' : ''}`}
+              role="button"
               tabIndex={0}
-              aria-label={`${d.hour}시: ${d.booked}명 신청, ${d.capacity}자리 중`}
+              aria-pressed={selected === d.hour}
+              aria-label={`${d.hour}시: ${d.booked}명 신청, ${d.capacity}자리 중. 눌러서 자세히 보기`}
+              onClick={() => setSelected((cur) => (cur === d.hour ? null : d.hour))}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setSelected((cur) => (cur === d.hour ? null : d.hour));
+                }
+              }}
               onMouseEnter={() => setHover(i)}
               onMouseLeave={() => setHover(null)}
               onFocus={() => setHover(i)}
@@ -119,7 +136,53 @@ function HourlyChart({ list }) {
           ))}
         </div>
       </div>
+      {selected ? (
+        <HourDetail hour={selected} list={list} onClose={() => setSelected(null)} />
+      ) : (
+        <p className="chartHint">막대를 클릭하면 그 시간대의 상세 신청 현황이 보여요.</p>
+      )}
     </figure>
+  );
+}
+
+// ───── 선택한 시간대의 상세 (몇 분 ~ 몇 분: 학번 이름) ─────
+function HourDetail({ hour, list, onClose }) {
+  const byTime = new Map(list.map((r) => [r.time, r]));
+  const slots = SLOTS.filter((slot) => slot.startsWith(`${hour}:`));
+  const booked = slots.filter((slot) => byTime.has(slot)).length;
+
+  return (
+    <div className="hourDetail">
+      <div className="hourDetailHeader">
+        <strong>{hour}시 상세</strong>
+        <span>
+          {booked}명 / {slots.length}자리
+        </span>
+        <button type="button" className="closeBtn" onClick={onClose} aria-label="닫기">
+          ✕
+        </button>
+      </div>
+      <ul className="slotList">
+        {slots.map((slot) => {
+          const r = byTime.get(slot);
+          return (
+            <li key={slot} className={r ? 'filled' : 'open'}>
+              <span className="slotRange">
+                {slot} ~ {addMin(slot, INTERVAL_MIN)}
+              </span>
+              {r ? (
+                <span className="slotWho">
+                  <span className="slotId">{r.studentId}</span>
+                  {r.name}
+                </span>
+              ) : (
+                <span className="slotEmpty">비어 있음</span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
   );
 }
 
