@@ -26,6 +26,42 @@ export async function getTakenTimes() {
   return res.json();
 }
 
+// ───── 관리자 ─────
+const TOKEN_KEY = 'mibs_admin_token';
+export const getAdminToken = () => sessionStorage.getItem(TOKEN_KEY);
+
+export async function adminLogin(password) {
+  const res = await fetch(`${API_URL}/api/admin/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password }),
+  });
+  if (!res.ok) throw await toError(res);
+  const { token } = await res.json();
+  sessionStorage.setItem(TOKEN_KEY, token);
+}
+
+export async function adminLogout() {
+  const token = getAdminToken();
+  sessionStorage.removeItem(TOKEN_KEY);
+  if (token) {
+    await fetch(`${API_URL}/api/admin/logout`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+    }).catch(() => {});
+  }
+}
+
+/** 전체 신청 목록 (관리자 전용). 토큰이 만료되면 err.status === 401 */
+export async function getWaitingList() {
+  const res = await fetch(`${API_URL}/api/waiting`, {
+    headers: { Authorization: `Bearer ${getAdminToken() ?? ''}` },
+  });
+  if (res.status === 401) sessionStorage.removeItem(TOKEN_KEY);
+  if (!res.ok) throw await toError(res);
+  return res.json();
+}
+
 // 서버 에러 응답 { code, message } 를 Error 로 변환
 async function toError(res) {
   let body = {};
@@ -36,5 +72,6 @@ async function toError(res) {
   }
   const err = new Error(body.message || `서버 오류가 발생했어요. (${res.status})`);
   err.code = body.code;
+  err.status = res.status;
   return err;
 }

@@ -1,6 +1,7 @@
 import './App.css'
 import Form from './form.jsx'
 import Time from './time.jsx'
+import Admin from './admin.jsx'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Form />} />
         <Route path='/time' element={<Time />} />
+        <Route path='/admin' element={<Admin />} />
       </Routes>
     </BrowserRouter>
   );

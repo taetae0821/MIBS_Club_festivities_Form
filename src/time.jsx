@@ -1,27 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { getTakenTimes, submitWaiting } from './api.js';
-
-// 선택 가능한 시간대 설정 (필요하면 여기만 바꾸면 됩니다)
-const START = '09:00';
-const END = '17:00';
-const INTERVAL_MIN = 10;
-
-function makeSlots(start, end, interval) {
-  const toMin = (t) => {
-    const [h, m] = t.split(':').map(Number);
-    return h * 60 + m;
-  };
-  const slots = [];
-  for (let t = toMin(start); t < toMin(end); t += interval) {
-    const h = String(Math.floor(t / 60)).padStart(2, '0');
-    const m = String(t % 60).padStart(2, '0');
-    slots.push(`${h}:${m}`);
-  }
-  return slots;
-}
-
-const SLOTS = makeSlots(START, END, INTERVAL_MIN);
+import { SLOTS } from './slots.js';
 
 function Time() {
   const navigate = useNavigate();
