@@ -106,10 +106,14 @@ function Time() {
             type="button"
             role="radio"
             aria-checked={time === slot}
-            disabled={isTaken}
+            aria-disabled={isTaken}
             title={isTaken ? '마감된 시간' : undefined}
             className={`slot${time === slot ? ' selected' : ''}${isTaken ? ' taken' : ''}`}
             onClick={() => {
+              if (isTaken) {
+                setError('이미 다른 사람이 선택했어요.');
+                return;
+              }
               setTime(slot);
               setError('');
             }}

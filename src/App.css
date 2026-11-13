@@ -170,7 +170,7 @@
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s, color 0.2s;
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled, .taken) {
     border-color: var(--accent-border);
   }
 
