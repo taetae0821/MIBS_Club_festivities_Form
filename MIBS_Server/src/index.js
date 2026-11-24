@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import crypto from 'node:crypto';
 import { initDb, pool } from './db.js';
+import { FRAMES as FRAME_LIST } from '../../src/frames.js';
 
 const app = express();
 const PORT = Number(process.env.PORT ?? 8080);
@@ -12,7 +13,8 @@ app.use(express.json());
 
 const STUDENT_ID_RE = /^\d{4,5}$/;
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
-const FRAMES = new Set(['검정/초록', '빨강/하늘', '핑크']);
+// 프레임 목록은 프론트의 src/frames.js 하나만 고치면 서버에도 반영됩니다.
+const FRAMES = new Set(FRAME_LIST);
 
 // ───── 관리자 인증 ─────
 // .env 의 ADMIN_PASSWORD 로 로그인하면 서명된 토큰을 발급합니다.
