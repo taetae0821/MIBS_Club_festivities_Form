@@ -1,7 +1,7 @@
 // 선택 가능한 시간대 설정 (필요하면 여기만 바꾸면 됩니다)
 // 시간 선택 화면과 관리자 차트가 함께 사용합니다.
-export const START = '09:00';
-export const END = '17:00';
+export const START = '08:20';
+export const END = '12:00';
 export const INTERVAL_MIN = 10;
 
 const toMin = (t) => {
