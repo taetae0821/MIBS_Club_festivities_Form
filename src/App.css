@@ -31,6 +31,19 @@
   margin-bottom: 6px;
 }
 
+/* 촬영 장소 안내 배지 */
+.location {
+  align-self: flex-start;
+  margin: 4px 0 12px;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-border);
+  border-radius: 999px;
+}
+
 .subtitle {
   font-size: 15px;
   color: var(--text);
@@ -81,6 +94,53 @@
   &:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 4px var(--accent-bg);
+  }
+}
+
+/* 프레임 선택 */
+.frameSection {
+  margin-top: 18px;
+}
+
+.frameTitle {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+.frameGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.frameOption {
+  min-height: 48px;
+  padding: 8px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--text-h);
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--accent-border);
+  }
+
+  &.selected {
+    color: var(--accent);
+    background: var(--accent-bg);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
   }
 }
 

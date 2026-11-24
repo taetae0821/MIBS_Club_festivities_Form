@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { FRAMES } from './frames.js';
 
 function Form() {
   const navigate = useNavigate();
@@ -8,6 +9,7 @@ function Form() {
   // 시간 페이지에서 "이전"으로 돌아오면 입력값 유지
   const [studentId, setStudentId] = useState(location.state?.studentId ?? '');
   const [name, setName] = useState(location.state?.name ?? '');
+  const [frame, setFrame] = useState(location.state?.frame ?? '');
   const [error, setError] = useState('');
 
   function handleSubmit(e) {
@@ -23,13 +25,18 @@ function Form() {
       setError('이름을 입력해 주세요.');
       return;
     }
+    if (!frame) {
+      setError('프레임을 선택해 주세요.');
+      return;
+    }
 
-    navigate('/time', { state: { studentId: id, name: n } });
+    navigate('/time', { state: { studentId: id, name: n, frame } });
   }
 
   return (
     <form className="card" onSubmit={handleSubmit} noValidate>
-      <p className="title">웨이팅 폼</p>
+      <p className="title">MIBS 인생네컷 웨이팅</p>
+      <p className="location">📍 3층 방송실에서 촬영</p>
       <p className="subtitle">학번과 이름을 입력해 주세요.</p>
 
       <div className="inputGroup">
@@ -59,6 +66,27 @@ function Form() {
             }}
           />
         </label>
+      </div>
+
+      <div className="frameSection">
+        <span className="frameTitle">프레임 선택</span>
+        <div className="frameGrid" role="radiogroup" aria-label="프레임 선택">
+          {FRAMES.map((option) => (
+            <button
+              key={option}
+              type="button"
+              role="radio"
+              aria-checked={frame === option}
+              className={`frameOption${frame === option ? ' selected' : ''}`}
+              onClick={() => {
+                setFrame(option);
+                setError('');
+              }}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
       </div>
 
       {error && <p className="error">{error}</p>}

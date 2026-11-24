@@ -40,9 +40,20 @@ async function setup() {
       id      INT PRIMARY KEY AUTO_INCREMENT,
       number  VARCHAR(10) NOT NULL UNIQUE,
       name    VARCHAR(10) NOT NULL,
+      frame   VARCHAR(20) NOT NULL DEFAULT '',
       time    VARCHAR(10) NOT NULL UNIQUE
     )
   `);
+
+  // 기존 테이블에 프레임 컬럼이 없으면 추가
+  const [frameColumn] = await p.query(
+    `SELECT 1 FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'students' AND COLUMN_NAME = 'frame'`,
+    [DB_NAME],
+  );
+  if (frameColumn.length === 0) {
+    await p.query("ALTER TABLE students ADD COLUMN frame VARCHAR(20) NOT NULL DEFAULT ''");
+  }
 
   // 이미 만들어진 테이블이면 time 에 UNIQUE 가 없을 수 있어서 추가
   const [idx] = await p.query(

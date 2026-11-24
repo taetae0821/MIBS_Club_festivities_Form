@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL ?? '';
 
 /**
  * 웨이팅 신청을 백엔드로 보냅니다.
- * 요청 본문(JSON): { studentId: "1101", name: "홍길동", time: "10:30" }
+ * 요청 본문(JSON): { studentId: "1101", name: "홍길동", frame: "핑크", time: "10:30" }
  */
 export async function submitWaiting(data) {
   const res = await fetch(`${API_URL}/api/waiting`, {

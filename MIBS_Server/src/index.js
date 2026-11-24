@@ -12,6 +12,7 @@ app.use(express.json());
 
 const STUDENT_ID_RE = /^\d{4,5}$/;
 const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
+const FRAMES = new Set(['검정/초록', '빨강/하늘', '핑크']);
 
 // ───── 관리자 인증 ─────
 // .env 의 ADMIN_PASSWORD 로 로그인하면 서명된 토큰을 발급합니다.
@@ -94,6 +95,7 @@ app.get('/api/health', async (req, res) => {
 app.post('/api/waiting', async (req, res) => {
   const studentId = String(req.body?.studentId ?? '').trim();
   const name = String(req.body?.name ?? '').trim();
+  const frame = String(req.body?.frame ?? '').trim();
   const time = String(req.body?.time ?? '').trim();
 
   if (!STUDENT_ID_RE.test(studentId)) {
@@ -102,16 +104,19 @@ app.post('/api/waiting', async (req, res) => {
   if (!name || name.length > 10) {
     return res.status(400).json({ message: '이름은 1~10자로 입력해 주세요.' });
   }
+  if (!FRAMES.has(frame)) {
+    return res.status(400).json({ message: '프레임을 선택해 주세요.' });
+  }
   if (!TIME_RE.test(time)) {
     return res.status(400).json({ message: '시간 형식이 올바르지 않아요.' });
   }
 
   try {
     const [result] = await pool.execute(
-      'INSERT INTO students (number, name, time) VALUES (?, ?, ?)',
-      [studentId, name, time],
+      'INSERT INTO students (number, name, frame, time) VALUES (?, ?, ?, ?)',
+      [studentId, name, frame, time],
     );
-    res.status(201).json({ id: result.insertId, studentId, name, time });
+    res.status(201).json({ id: result.insertId, studentId, name, frame, time });
   } catch (err) {
     if (err.code === 'ER_DUP_ENTRY') {
       // 어떤 UNIQUE 에 걸렸는지 구분 (메시지 예: ... for key 'students.uq_time')
@@ -142,7 +147,7 @@ app.get('/api/waiting/times', async (req, res) => {
 app.get('/api/waiting', requireAdmin, async (req, res) => {
   try {
     const [rows] = await pool.query(
-      `SELECT id, number AS studentId, name, time
+      `SELECT id, number AS studentId, name, frame, time
        FROM students ORDER BY time, id`,
     );
     res.json(rows);
