@@ -41,7 +41,7 @@ function Time() {
   }, [loadTaken]);
 
   // 학번/이름 없이 바로 들어오면 첫 페이지로
-  if (!info?.studentId || !info?.name || !info?.frame) {
+  if (!info?.studentId || !info?.name || !info?.teacher || !info?.frame) {
     return <Navigate to="/" replace />;
   }
 
@@ -55,7 +55,7 @@ function Time() {
     setError('');
     try {
       const chosen = time;
-      await submitWaiting({ studentId: info.studentId, name: info.name, frame: info.frame, time: chosen });
+      await submitWaiting({ studentId: info.studentId, name: info.name, teacher: info.teacher, frame: info.frame, time: chosen });
       // 전송 중에 목록 갱신이 내 신청을 '마감'으로 보고 선택을 지웠을 수 있어서 다시 지정
       setTime(chosen);
       setError('');
@@ -80,6 +80,8 @@ function Time() {
           <dd>{info.studentId}</dd>
           <dt>이름</dt>
           <dd>{info.name}</dd>
+          <dt>선생님</dt>
+          <dd>{info.teacher}</dd>
           <dt>프레임</dt>
           <dd>{info.frame}</dd>
           <dt>시간</dt>
@@ -96,7 +98,7 @@ function Time() {
     <form className="card" onSubmit={handleSubmit} noValidate>
       <p className="title">시간 선택</p>
       <p className="subtitle">
-        {info.studentId} {info.name}님 · 프레임 {info.frame}, 원하는 시간을 골라 주세요.
+        {info.studentId} {info.name}님 · {info.teacher} · 프레임 {info.frame}, 원하는 시간을 골라 주세요.
       </p>
 
       <div className="slotGrid" role="radiogroup" aria-label="시간 선택">

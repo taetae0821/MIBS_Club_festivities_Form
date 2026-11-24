@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FRAMES } from './frames.js';
+import { TEACHERS } from './teachers.js';
 
 function Form() {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ function Form() {
   // 시간 페이지에서 "이전"으로 돌아오면 입력값 유지
   const [studentId, setStudentId] = useState(location.state?.studentId ?? '');
   const [name, setName] = useState(location.state?.name ?? '');
+  const [teacher, setTeacher] = useState(location.state?.teacher ?? '');
   const [frame, setFrame] = useState(location.state?.frame ?? '');
   const [error, setError] = useState('');
 
@@ -25,12 +27,16 @@ function Form() {
       setError('이름을 입력해 주세요.');
       return;
     }
+    if (!teacher) {
+      setError('같이 찍을 선생님을 선택해 주세요.');
+      return;
+    }
     if (!frame) {
       setError('프레임을 선택해 주세요.');
       return;
     }
 
-    navigate('/time', { state: { studentId: id, name: n, frame } });
+    navigate('/time', { state: { studentId: id, name: n, teacher, frame } });
   }
 
   return (
@@ -66,6 +72,27 @@ function Form() {
             }}
           />
         </label>
+      </div>
+
+      <div className="frameSection">
+        <span className="frameTitle">선생님 선택</span>
+        <div className="frameGrid" role="radiogroup" aria-label="선생님 선택">
+          {TEACHERS.map((option) => (
+            <button
+              key={option}
+              type="button"
+              role="radio"
+              aria-checked={teacher === option}
+              className={`frameOption${teacher === option ? ' selected' : ''}`}
+              onClick={() => {
+                setTeacher(option);
+                setError('');
+              }}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="frameSection">

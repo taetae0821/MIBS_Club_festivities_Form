@@ -174,6 +174,7 @@ function HourDetail({ hour, list, onClose }) {
                 <span className="slotWho">
                   <span className="slotId">{r.studentId}</span>
                   {r.name}
+                  {r.teacher && <span>{r.teacher}</span>}
                   {r.frame && <span>{r.frame}</span>}
                 </span>
               ) : (
@@ -270,6 +271,7 @@ function Dashboard({ onLogout }) {
                 <th>시간</th>
                 <th>학번</th>
                 <th>이름</th>
+                <th>선생님</th>
                 <th>프레임</th>
               </tr>
             </thead>
@@ -279,6 +281,7 @@ function Dashboard({ onLogout }) {
                   <td>{r.time}</td>
                   <td>{r.studentId}</td>
                   <td>{r.name}</td>
+                  <td>{r.teacher || '-'}</td>
                   <td>{r.frame || '-'}</td>
                 </tr>
               ))}

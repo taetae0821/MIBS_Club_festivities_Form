@@ -9,5 +9,7 @@ CREATE TABLE IF NOT EXISTS students (
   id      INT PRIMARY KEY AUTO_INCREMENT,  -- 자동 증가
   number  VARCHAR(10) NOT NULL UNIQUE,     -- 학번 (학번당 1번만 신청)
   name    VARCHAR(10) NOT NULL,            -- 이름
+  teacher VARCHAR(20) NOT NULL DEFAULT '', -- 같이 찍을 선생님
+  frame   VARCHAR(20) NOT NULL DEFAULT '', -- 프레임
   time    VARCHAR(10) NOT NULL UNIQUE      -- 선택한 시간 (HH:MM, 한 시간에 1명)
 );
